@@ -27,14 +27,14 @@ class AlertMessage
         add_action('admin_init', array($this, 'settings'));
         add_filter('the_content', array($this, 'ifWrap'));
         add_action('init', array($this, 'languages'));
-        
     }
     // PLUGIN    ===========
     //================================================================================================
 
     function ifWrap($content)
     {
-        if (is_single() && is_main_query() &&
+        if (
+            is_single() && is_main_query() &&
             (
                 get_option('amsg_wordcount', '1')  ||
                 get_option('amsg_character', '1')  ||
@@ -45,47 +45,49 @@ class AlertMessage
         }
         return $content;
     }
-    function createHTML($content){
+    function createHTML($content)
+    {
         $headline       = get_option('amsg_headline') ? get_option('amsg_headline')  : false;
         $location       = get_option('amsg_location') ? get_option('amsg_location')  : false;
-        $wordCount      = get_option('amsg_wordcount')? get_option('amsg_wordcount') : false;
-        $characterCount = get_option('amsg_character')? get_option('amsg_character') : false;
-        $readTime       = get_option('amsg_readtime') ? get_option('amsg_readtime')  : false;
+        $is_active     = get_option('amsg_is_active') ? get_option('amsg_is_active')  : false;
+        // $wordCount      = get_option('amsg_wordcount') ? get_option('amsg_wordcount') : false;
+        // $characterCount = get_option('amsg_character') ? get_option('amsg_character') : false;
+        // $readTime       = get_option('amsg_readtime') ? get_option('amsg_readtime')  : false;
 
-      if ($headline || $location || $wordCount || $characterCount || $readTime) {
+        if ( $is_active  && $headline &&  $location) {
 
-        $html = '<div class="alert-message wrap">';
-        if ($headline) {
-            $html .= "<h2>$headline</h2>";
-      
-        }
-        if ($wordCount) {
-            $html .= '<p> '. __ ( 'Word Count' , 'alert-message' ) . ': ' . str_word_count(strip_tags($content)) . ' ' . __('Words', 'alert-message' ) . '</p>';
-        }
-        if ($characterCount) {
-            $html .= '<p>' . __('Character Count' , 'alert-message' ) . ':  ' . strlen(strip_tags($content)) . ' '. __('Characters', 'alert-message' ) . '</p>';
-        }
-        if ($readTime) {
-            $html .= '<p>' . __('Read Time' , 'alert-message' ) . ': ' . round(str_word_count(strip_tags($content)) / 200) . ' ' . __('Minutes', 'alert-message' ) . '</p>';
-        }
-        $html .= '</div>';
+            $html = '<div class="alert-message wrap">';
+            $html .= '<div class="alert-message-icon">';
+            // Icon informmation 
+            $html .= '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">';
+            $html .= '<path d="M0 0h24v24H0z" fill="none"/>';
+            $html .= '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-6h2v2h-2v-2zm0-6h2v4h-2V8z"/>';
+            $html .= '</svg>';
 
-     // match switch case
-        switch ($location) {
-            case '0':
-                return $content . $html;
-                break;
-            case '1':
-                return $html . $content;
-                break;
-            case '2':
-                return $html . $content . $html;
-                break;
+
+            
+            $html .= '</div>';
+            if ($headline) {
+                $html .= "<div class = 'alert-message-text'>$headline</div>";
+            }
+ 
+            $html .= '</div>';
+
+            // match switch case
+            switch ($location) {
+                case '0':
+                    return $content . $html;
+                    break;
+                case '1':
+                    return $html . $content;
+                    break;
+                case '2':
+                    return $html . $content . $html;
+                    break;
+            }
+
+            return $content;
         }
-
-        return $content;
-
-       }
     }
 
     function languages()
@@ -123,17 +125,22 @@ class AlertMessage
         add_settings_field('amsg_headline', __('Headline Text', 'alert-message'), array($this, 'amsg_headlineHTML'), 'alert-message-settings', 'amsg_first_section');
         register_setting("Alert_Message", "amsg_headline", array('sanitize_callback' => 'sanitize_text_field', 'default' => 'Your Message!'));
 
-        //WORD COUNT
-        add_settings_field('amsg_wordcount', __('Display Word Count', 'alert-message'),  array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_wordcount'));
-        register_setting("Alert_Message", "amsg_wordcount", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
+        //IS ACTIVE
+        add_settings_field('amsg_is_active', __('Is Active', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_is_active'));
+        register_setting("Alert_Message", "amsg_is_active", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
 
-        // CHARACTER COUNT
-        add_settings_field('amsg_character', __('Display Character Count', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_character'));
-        register_setting("Alert_Message", "amsg_character", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
 
-        // READ TIME
-        add_settings_field('amsg_readtime', __('Read Time', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_readtime'));
-        register_setting("Alert_Message", "amsg_readtime", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
+        // //WORD COUNT
+        // add_settings_field('amsg_wordcount', __('Display Word Count', 'alert-message'),  array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_wordcount'));
+        // register_setting("Alert_Message", "amsg_wordcount", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
+
+        // // CHARACTER COUNT
+        // add_settings_field('amsg_character', __('Display Character Count', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_character'));
+        // register_setting("Alert_Message", "amsg_character", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
+
+        // // READ TIME
+        // add_settings_field('amsg_readtime', __('Read Time', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_readtime'));
+        // register_setting("Alert_Message", "amsg_readtime", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
     }
 
     // CALLBACKS
