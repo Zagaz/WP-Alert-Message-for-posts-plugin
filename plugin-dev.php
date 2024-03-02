@@ -27,6 +27,7 @@ class AlertMessage
         add_action('admin_init', array($this, 'settings'));
         add_filter('the_content', array($this, 'ifWrap'));
         add_action('init', array($this, 'languages'));
+        add_action('wp_enqueue_scripts', array($this, 'enqueue'));
     }
     // PLUGIN    ===========
     //================================================================================================
@@ -50,27 +51,53 @@ class AlertMessage
         $headline       = get_option('amsg_headline') ? get_option('amsg_headline')  : false;
         $location       = get_option('amsg_location') ? get_option('amsg_location')  : false;
         $is_active     = get_option('amsg_is_active') ? get_option('amsg_is_active')  : false;
-        // $wordCount      = get_option('amsg_wordcount') ? get_option('amsg_wordcount') : false;
-        // $characterCount = get_option('amsg_character') ? get_option('amsg_character') : false;
-        // $readTime       = get_option('amsg_readtime') ? get_option('amsg_readtime')  : false;
 
-        if ( $is_active  && $headline &&  $location) {
+        $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype')  : '4';
+
+        $icon_info = '<i class="fas fa-info-circle"></i>';
+        $icon_waring = '<i class="fas fa-exclamation-triangle"></i>';
+        $icon_bomb  = '<i class="fas fa-bomb"></i>';
+        $icon_success = '<i class="fas fa-check-circle"></i>';
+
+        $icon = '';
+        $class = '';
+
+
+
+        switch ($msgtype) {
+
+            case '1':
+                $icon = $icon_info;
+                $class = 'alert-info';
+                break;
+            case '2':
+                $icon = $icon_waring;
+                $class = 'alert-warning';
+                break;
+            case '3':
+                $icon = $icon_bomb;
+                $class = 'alert-bomb';
+                break;
+            case '4':
+                $icon = $icon_success;
+                $class = 'alert-success';
+                break;
+        }
+
+
+
+
+        if ($is_active  && $headline &&  $location && $msgtype) {
+
 
             $html = '<div class="alert-message wrap">';
-            $html .= '<div class="alert-message-icon">';
-            // Icon informmation 
-            $html .= '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">';
-            $html .= '<path d="M0 0h24v24H0z" fill="none"/>';
-            $html .= '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-6h2v2h-2v-2zm0-6h2v4h-2V8z"/>';
-            $html .= '</svg>';
-
-
-            
+            $html .= "<div class='alert-message-icon $class'>";
+            $html .= $icon;
             $html .= '</div>';
             if ($headline) {
                 $html .= "<div class = 'alert-message-text'>$headline</div>";
             }
- 
+
             $html .= '</div>';
 
             // match switch case
@@ -95,6 +122,14 @@ class AlertMessage
         load_plugin_textdomain('alert-message', false, dirname(plugin_basename(__FILE__)) . '/languages');
     }
 
+    function enqueue()
+    {
+        wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+
+        // assets/css/style.css
+        wp_enqueue_style('alert-message', plugin_dir_url(__FILE__) . 'assets/css/style.css');
+    }
+
     // SETTINGS ===========
     //================================================================================================
     function settings()
@@ -107,13 +142,6 @@ class AlertMessage
             'alert-message-settings',  // (Slug) The slug name of the page on which to display the section.
         );
 
-        // Example of a field and settin ==============
-
-        // add_settings_field( $id:string, $title:string, $callback:callable, $page:string, $section:string, $args:array );
-        //https://developer.wordpress.org/reference/functions/add_settings_field/
-
-        // register_setting( $option_group:string, $option_name:string, $args:array );
-        // https://developer.wordpress.org/reference/functions/register_setting/
 
         // LOCATION
 
@@ -128,19 +156,9 @@ class AlertMessage
         //IS ACTIVE
         add_settings_field('amsg_is_active', __('Is Active', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_is_active'));
         register_setting("Alert_Message", "amsg_is_active", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
-
-
-        // //WORD COUNT
-        // add_settings_field('amsg_wordcount', __('Display Word Count', 'alert-message'),  array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_wordcount'));
-        // register_setting("Alert_Message", "amsg_wordcount", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
-
-        // // CHARACTER COUNT
-        // add_settings_field('amsg_character', __('Display Character Count', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_character'));
-        // register_setting("Alert_Message", "amsg_character", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
-
-        // // READ TIME
-        // add_settings_field('amsg_readtime', __('Read Time', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_readtime'));
-        // register_setting("Alert_Message", "amsg_readtime", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
+        // Message Type
+        add_settings_field('amsg_msgtype', __('Type of message', 'alert-message'), array($this, 'msgtypeHTML'), 'alert-message-settings', 'amsg_first_section');
+        register_setting("Alert_Message", "amsg_msgtype", array('sanitize_callback' => array($this, 'msgtypeSanitize'), 'default' => '1'));
     }
 
     // CALLBACKS
@@ -165,6 +183,28 @@ class AlertMessage
 
             add_settings_error('amsg_location', __('amsg_location_error', 'languages'), __('Invalid value'), 'error');
             return get_option('amsg_location');
+        }
+        return $input;
+    }
+
+    function msgtypeHTML()
+    {
+    ?>
+        <select name="amsg_msgtype">
+            <option value="1" <?php selected(get_option('amsg_msgtype'), '1') ?>> <?php _e("Info", "alert-message"); ?></option>
+            <option value="2" <?php selected(get_option('amsg_msgtype'), '2') ?>> <?php _e("Warning", "alert-message"); ?></option>
+            <option value="3" <?php selected(get_option('amsg_msgtype'), '3') ?>> <?php _e('Danger', "alert-message"); ?></option>
+            <option value="4" <?php selected(get_option('amsg_msgtype'), '4') ?>> <?php _e('Success', "alert-message"); ?></option>
+        </select>
+    <?php
+    }
+
+    function msgtypeSanitize($input)
+    {
+        if ($input != '1' && $input != '2' && $input != '3' && $input != '4') {
+
+            add_settings_error('amsg_msgtype', __('amsg_msgtype_error', 'languages'), __('Invalid value'), 'error');
+            return get_option('amsg_msgtype');
         }
         return $input;
     }

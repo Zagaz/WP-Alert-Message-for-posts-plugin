@@ -1,0 +1,15 @@
+.alert-message {
+  color: #fff;
+}
+.alert-message .alert-info {
+  background-color: #007bff;
+}
+.alert-message .alert-warning {
+  background-color: #ffc107;
+}
+.alert-message .alert-bomb {
+  background-color: #dc3545;
+}
+.alert-message .alert-success {
+  background-color: #28a745;
+}/*# sourceMappingURL=style.css.map */

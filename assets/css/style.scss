@@ -1,0 +1,28 @@
+$info: #007bff;
+$warning: #ffc107;
+$bomb: #dc3545;
+$success: #28a745;
+
+
+.alert-message {
+     color : #fff;
+  
+     .alert-info{
+          background-color: $info;
+     }
+     .alert-warning{
+          background-color: $warning;
+     }
+     .alert-bomb{
+          background-color: $bomb;
+     }
+     .alert-success{
+          background-color: $success;
+     }
+
+   
+
+
+ 
+
+}
