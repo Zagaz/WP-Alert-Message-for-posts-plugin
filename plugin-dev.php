@@ -20,7 +20,6 @@ $alertMessage = new AlertMessage();
 
 class AlertMessage
 {
-
     public function __construct()
     {
         add_action('admin_menu', array($this, 'admin_page'));
@@ -31,7 +30,6 @@ class AlertMessage
     }
     // PLUGIN    ===========
   
-
     function ifWrap($content)
     {
         if (
@@ -60,7 +58,6 @@ class AlertMessage
         $icon_bomb  = '<i class="fas fa-bomb"></i>';
         $icon_success = '<i class="fas fa-check-circle"></i>';
 
-  
         // Icons and classes names
         switch ($msgtype) {
             case '1':
@@ -87,9 +84,7 @@ class AlertMessage
         // Render the HTML
         if ($is_active  && $headline &&  $location && $msgtype) {
 
-            
             $html = $this->alertHTML($class, $icon, $headline, $classBox);
-    
 
             // match switch case
             switch ($location) {
@@ -145,9 +140,7 @@ class AlertMessage
             'alert-message-settings',  // (Slug) The slug name of the page on which to display the section.
         );
 
-
         // LOCATION
-
 
         add_settings_field('amsg_location', __('Display Location', 'alert-message'), array($this, 'locationHTML'), 'alert-message-settings', 'amsg_first_section');
         register_setting("Alert_Message", "amsg_location", array('sanitize_callback' => array($this, 'locationSanitize'), 'default' => '1'));
@@ -215,7 +208,7 @@ class AlertMessage
     function amsg_headlineHTML()
     {
     ?>
-        <input type="text" name="amsg_headline" value="<?php echo esc_attr(get_option('amsg_headline')); ?>">
+        <textarea name="amsg_headline" rows="3" cols="50"><?php echo get_option('amsg_headline'); ?></textarea>
     <?php
     }
 
