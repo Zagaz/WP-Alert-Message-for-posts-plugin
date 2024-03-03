@@ -48,23 +48,21 @@ class AlertMessage
     }
     function createHTML($content)
     {
+        // Get the values from the database
         $headline       = get_option('amsg_headline') ? get_option('amsg_headline')  : false;
         $location       = get_option('amsg_location') ? get_option('amsg_location')  : false;
         $is_active     = get_option('amsg_is_active') ? get_option('amsg_is_active')  : false;
-
         $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype')  : '4';
 
+        // Icons from font-awesome
         $icon_info = '<i class="fas fa-info-circle"></i>';
         $icon_waring = '<i class="fas fa-exclamation-triangle"></i>';
         $icon_bomb  = '<i class="fas fa-bomb"></i>';
         $icon_success = '<i class="fas fa-check-circle"></i>';
 
-        $icon = '';
-        $class = '';
-        $classBox = '';
-
+  
+        // Icons and classes names
         switch ($msgtype) {
-
             case '1':
                 $icon = $icon_info;
                 $class = 'alert-info';
@@ -86,38 +84,40 @@ class AlertMessage
                 $classBox = 'alert-box-success';
                 break;
         }
-
-
-
-
+        // Render the HTML
         if ($is_active  && $headline &&  $location && $msgtype) {
 
-
-            $html = "<div class='alert-message $classBox wrap'>";
-            $html .= "<div class='alert-message-icon $class'>";
-            $html .= $icon;
-            $html .= '</div>';
-            if ($headline) {
-                $html .= "<div class = 'alert-message-text'>$headline</div>";
-            }
-
-            $html .= '</div>';
+            
+            $html = $this->alertHTML($class, $icon, $headline, $classBox);
+    
 
             // match switch case
             switch ($location) {
-                case '0':
+                case '1':
                     return $content . $html;
                     break;
-                case '1':
+                case '2':
                     return $html . $content;
                     break;
-                case '2':
+                case '3':
                     return $html . $content . $html;
                     break;
             }
-
             return $content;
         }
+    }
+
+    function alertHTML($class, $icon, $headline, $classBox){
+        $html = "<div class='alert-message $classBox wrap'>";
+        $html .= "<div class='alert-message-icon $class'>";
+        $html .= $icon;
+        $html .= '</div>';
+        if ($headline) {
+            $html .= "<div class = 'alert-message-text'>$headline</div>";
+        }
+        $html .= '</div>';
+        $GLOBALS['html'] = $html;
+        return  $html;
     }
 
     function languages()
@@ -150,7 +150,7 @@ class AlertMessage
 
 
         add_settings_field('amsg_location', __('Display Location', 'alert-message'), array($this, 'locationHTML'), 'alert-message-settings', 'amsg_first_section');
-        register_setting("Alert_Message", "amsg_location", array('sanitize_callback' => array($this, 'locationSanitize'), 'default' => '0'));
+        register_setting("Alert_Message", "amsg_location", array('sanitize_callback' => array($this, 'locationSanitize'), 'default' => '1'));
 
         // HEADLINE TEXT
         add_settings_field('amsg_headline', __('Headline Text', 'alert-message'), array($this, 'amsg_headlineHTML'), 'alert-message-settings', 'amsg_first_section');
@@ -173,16 +173,16 @@ class AlertMessage
 
 ?>
         <select name="amsg_location">
-            <option value="0" <?php selected(get_option('amsg_location'), '0') ?>> <?php _e("Bottom of post", "alert-message"); ?></option>
-            <option value="1" <?php selected(get_option('amsg_location'), '1') ?>> <?php _e("Top of post", "alert-message"); ?></option>
-            <option value="2" <?php selected(get_option('amsg_location'), '2') ?>> <?php _e('Both', "alert-message"); ?></option>
+            <option value="1" <?php selected(get_option('amsg_location'), '1') ?>> <?php _e("Bottom of post", "alert-message"); ?></option>
+            <option value="2" <?php selected(get_option('amsg_location'), '2') ?>> <?php _e("Top of post", "alert-message"); ?></option>
+            <option value="3" <?php selected(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?></option>
         </select>
     <?php
     }
 
     function locationSanitize($input)
     {
-        if ($input != '0' && $input != '1' && $input != '2') {
+        if ($input != '1' && $input != '2' && $input != '3') {
 
             add_settings_error('amsg_location', __('amsg_location_error', 'languages'), __('Invalid value'), 'error');
             return get_option('amsg_location');
@@ -258,6 +258,13 @@ class AlertMessage
                 submit_button();
                 ?>
             </form>
+            <?php 
+           
+            ?>
+
+            
+      
+           
         </div>
 <?php
     }
