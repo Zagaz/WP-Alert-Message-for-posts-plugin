@@ -2,7 +2,7 @@
 /*
 Plugin Name: Alert Message
 Author: André Ranulfo
-Aurhor URI: https://linkedin.com/in/andre-ranulfo
+Aurhor URI: https://github.com/Zagaz/WP-Alert-Message-for-posts-plugin
 Version: 1.0
 Description: Just for fun!
 language Domain: alert-message
@@ -27,14 +27,15 @@ class AlertMessage
         add_action('admin_init', array($this, 'settings'));
         add_filter('the_content', array($this, 'ifWrap'));
         add_action('init', array($this, 'languages'));
-        
+        add_action('wp_enqueue_scripts', array($this, 'enqueue'));
     }
     // PLUGIN    ===========
-    //================================================================================================
+  
 
     function ifWrap($content)
     {
-        if (is_single() && is_main_query() &&
+        if (
+            is_single() && is_main_query() &&
             (
                 get_option('amsg_wordcount', '1')  ||
                 get_option('amsg_character', '1')  ||
@@ -45,52 +46,91 @@ class AlertMessage
         }
         return $content;
     }
-    function createHTML($content){
+    function createHTML($content)
+    {
+        // Get the values from the database
         $headline       = get_option('amsg_headline') ? get_option('amsg_headline')  : false;
         $location       = get_option('amsg_location') ? get_option('amsg_location')  : false;
-        $wordCount      = get_option('amsg_wordcount')? get_option('amsg_wordcount') : false;
-        $characterCount = get_option('amsg_character')? get_option('amsg_character') : false;
-        $readTime       = get_option('amsg_readtime') ? get_option('amsg_readtime')  : false;
+        $is_active     = get_option('amsg_is_active') ? get_option('amsg_is_active')  : false;
+        $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype')  : '4';
 
-      if ($headline || $location || $wordCount || $characterCount || $readTime) {
+        // Icons from font-awesome
+        $icon_info = '<i class="fas fa-info-circle"></i>';
+        $icon_waring = '<i class="fas fa-exclamation-triangle"></i>';
+        $icon_bomb  = '<i class="fas fa-bomb"></i>';
+        $icon_success = '<i class="fas fa-check-circle"></i>';
 
-        $html = '<div class="alert-message wrap">';
-        if ($headline) {
-            $html .= "<h2>$headline</h2>";
-      
-        }
-        if ($wordCount) {
-            $html .= '<p> '. __ ( 'Word Count' , 'alert-message' ) . ': ' . str_word_count(strip_tags($content)) . ' ' . __('Words', 'alert-message' ) . '</p>';
-        }
-        if ($characterCount) {
-            $html .= '<p>' . __('Character Count' , 'alert-message' ) . ':  ' . strlen(strip_tags($content)) . ' '. __('Characters', 'alert-message' ) . '</p>';
-        }
-        if ($readTime) {
-            $html .= '<p>' . __('Read Time' , 'alert-message' ) . ': ' . round(str_word_count(strip_tags($content)) / 200) . ' ' . __('Minutes', 'alert-message' ) . '</p>';
-        }
-        $html .= '</div>';
-
-     // match switch case
-        switch ($location) {
-            case '0':
-                return $content . $html;
-                break;
+  
+        // Icons and classes names
+        switch ($msgtype) {
             case '1':
-                return $html . $content;
+                $icon = $icon_info;
+                $class = 'alert-info';
+                $classBox = 'alert-box-info';
                 break;
             case '2':
-                return $html . $content . $html;
+                $icon = $icon_waring;
+                $class = 'alert-warning';
+                $classBox = 'alert-box-warning';
+                break;
+            case '3':
+                $icon = $icon_bomb;
+                $class = 'alert-bomb';
+                $classBox = 'alert-box-bomb';
+                break;
+            case '4':
+                $icon = $icon_success;
+                $class = 'alert-success';
+                $classBox = 'alert-box-success';
                 break;
         }
+        // Render the HTML
+        if ($is_active  && $headline &&  $location && $msgtype) {
 
-        return $content;
+            
+            $html = $this->alertHTML($class, $icon, $headline, $classBox);
+    
 
-       }
+            // match switch case
+            switch ($location) {
+                case '1':
+                    return $content . $html;
+                    break;
+                case '2':
+                    return $html . $content;
+                    break;
+                case '3':
+                    return $html . $content . $html;
+                    break;
+            }
+            return $content;
+        }
+    }
+
+    function alertHTML($class, $icon, $headline, $classBox){
+        $html = "<div class='alert-message $classBox wrap'>";
+        $html .= "<div class='alert-message-icon $class'>";
+        $html .= $icon;
+        $html .= '</div>';
+        if ($headline) {
+            $html .= "<div class = 'alert-message-text'>$headline</div>";
+        }
+        $html .= '</div>';
+        $GLOBALS['html'] = $html;
+        return  $html;
     }
 
     function languages()
     {
         load_plugin_textdomain('alert-message', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    }
+
+    function enqueue()
+    {
+        wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+
+        // assets/css/style.css
+        wp_enqueue_style('alert-message', plugin_dir_url(__FILE__) . 'assets/css/style.css');
     }
 
     // SETTINGS ===========
@@ -105,35 +145,23 @@ class AlertMessage
             'alert-message-settings',  // (Slug) The slug name of the page on which to display the section.
         );
 
-        // Example of a field and settin ==============
-
-        // add_settings_field( $id:string, $title:string, $callback:callable, $page:string, $section:string, $args:array );
-        //https://developer.wordpress.org/reference/functions/add_settings_field/
-
-        // register_setting( $option_group:string, $option_name:string, $args:array );
-        // https://developer.wordpress.org/reference/functions/register_setting/
 
         // LOCATION
 
 
         add_settings_field('amsg_location', __('Display Location', 'alert-message'), array($this, 'locationHTML'), 'alert-message-settings', 'amsg_first_section');
-        register_setting("Alert_Message", "amsg_location", array('sanitize_callback' => array($this, 'locationSanitize'), 'default' => '0'));
+        register_setting("Alert_Message", "amsg_location", array('sanitize_callback' => array($this, 'locationSanitize'), 'default' => '1'));
 
         // HEADLINE TEXT
         add_settings_field('amsg_headline', __('Headline Text', 'alert-message'), array($this, 'amsg_headlineHTML'), 'alert-message-settings', 'amsg_first_section');
         register_setting("Alert_Message", "amsg_headline", array('sanitize_callback' => 'sanitize_text_field', 'default' => 'Your Message!'));
 
-        //WORD COUNT
-        add_settings_field('amsg_wordcount', __('Display Word Count', 'alert-message'),  array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_wordcount'));
-        register_setting("Alert_Message", "amsg_wordcount", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
-
-        // CHARACTER COUNT
-        add_settings_field('amsg_character', __('Display Character Count', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_character'));
-        register_setting("Alert_Message", "amsg_character", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
-
-        // READ TIME
-        add_settings_field('amsg_readtime', __('Read Time', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_readtime'));
-        register_setting("Alert_Message", "amsg_readtime", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
+        //IS ACTIVE
+        add_settings_field('amsg_is_active', __('Is Active', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_is_active'));
+        register_setting("Alert_Message", "amsg_is_active", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
+        // Message Type
+        add_settings_field('amsg_msgtype', __('Type of message', 'alert-message'), array($this, 'msgtypeHTML'), 'alert-message-settings', 'amsg_first_section');
+        register_setting("Alert_Message", "amsg_msgtype", array('sanitize_callback' => array($this, 'msgtypeSanitize'), 'default' => '1'));
     }
 
     // CALLBACKS
@@ -145,19 +173,41 @@ class AlertMessage
 
 ?>
         <select name="amsg_location">
-            <option value="0" <?php selected(get_option('amsg_location'), '0') ?>> <?php _e("Bottom of post", "alert-message"); ?></option>
-            <option value="1" <?php selected(get_option('amsg_location'), '1') ?>> <?php _e("Top of post", "alert-message"); ?></option>
-            <option value="2" <?php selected(get_option('amsg_location'), '2') ?>> <?php _e('Both', "alert-message"); ?></option>
+            <option value="1" <?php selected(get_option('amsg_location'), '1') ?>> <?php _e("Bottom of post", "alert-message"); ?></option>
+            <option value="2" <?php selected(get_option('amsg_location'), '2') ?>> <?php _e("Top of post", "alert-message"); ?></option>
+            <option value="3" <?php selected(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?></option>
         </select>
     <?php
     }
 
     function locationSanitize($input)
     {
-        if ($input != '0' && $input != '1' && $input != '2') {
+        if ($input != '1' && $input != '2' && $input != '3') {
 
             add_settings_error('amsg_location', __('amsg_location_error', 'languages'), __('Invalid value'), 'error');
             return get_option('amsg_location');
+        }
+        return $input;
+    }
+
+    function msgtypeHTML()
+    {
+    ?>
+        <select name="amsg_msgtype">
+            <option value="1" <?php selected(get_option('amsg_msgtype'), '1') ?>> <?php _e("Info", "alert-message"); ?></option>
+            <option value="2" <?php selected(get_option('amsg_msgtype'), '2') ?>> <?php _e("Warning", "alert-message"); ?></option>
+            <option value="3" <?php selected(get_option('amsg_msgtype'), '3') ?>> <?php _e('Danger', "alert-message"); ?></option>
+            <option value="4" <?php selected(get_option('amsg_msgtype'), '4') ?>> <?php _e('Success', "alert-message"); ?></option>
+        </select>
+    <?php
+    }
+
+    function msgtypeSanitize($input)
+    {
+        if ($input != '1' && $input != '2' && $input != '3' && $input != '4') {
+
+            add_settings_error('amsg_msgtype', __('amsg_msgtype_error', 'languages'), __('Invalid value'), 'error');
+            return get_option('amsg_msgtype');
         }
         return $input;
     }
@@ -208,6 +258,9 @@ class AlertMessage
                 submit_button();
                 ?>
             </form>
+            <?php 
+           
+            ?>
         </div>
 <?php
     }
