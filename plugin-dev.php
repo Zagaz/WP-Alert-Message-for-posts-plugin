@@ -2,7 +2,7 @@
 /*
 Plugin Name: Alert Message
 Author: André Ranulfo
-Aurhor URI: https://linkedin.com/in/andre-ranulfo
+Aurhor URI: https://github.com/Zagaz/WP-Alert-Message-for-posts-plugin
 Version: 1.0
 Description: Just for fun!
 language Domain: alert-message
@@ -261,10 +261,6 @@ class AlertMessage
             <?php 
            
             ?>
-
-            
-      
-           
         </div>
 <?php
     }
