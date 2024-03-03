@@ -58,6 +58,12 @@ class AlertMessage
         $icon_bomb  = '<i class="fas fa-bomb"></i>';
         $icon_success = '<i class="fas fa-check-circle"></i>';
 
+        // Message Type
+
+        // Icon
+        // Class
+        // classBox
+
         // Icons and classes names
         switch ($msgtype) {
             case '1':
