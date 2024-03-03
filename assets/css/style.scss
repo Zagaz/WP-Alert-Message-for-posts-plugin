@@ -1,24 +1,75 @@
 $info: #007bff;
-$warning: #ffc107;
+$info-light: #cce5ff;
+$warning: #c89806;
+$warning-light: #ffecb5;
 $bomb: #dc3545;
+$bomb-light: #f8d7da;
 $success: #28a745;
+$success-light: #d4edda;
 
+// a bundle of color, background-color 
+// for alert message
+
+@mixin alertBox ($color){
+     border-right: 4px solid $color;
+}
+
+@mixin alert($color, $background-color) {
+     color: $color;
+     background-color: $background-color;
+     width : 50px;
+     height: inherit;
+     display: flex;
+     padding: 20px;
+     justify-content: center;
+     min-width: 45px;
+     font-size: 50px;
+}
 
 .alert-message {
-     color : #fff;
-  
+
+     &.alert-box-info{
+          @include alertBox($info);
+     }
+     &.alert-box-warning{
+          @include alertBox($warning);
+     }
+     &.alert-box-bomb{
+          @include alertBox($bomb);
+     }
+     &.alert-box-success{
+          @include alertBox($success);
+     }
+     
+
+display: flex;
      .alert-info{
-          background-color: $info;
+          @include alert($info-light, $info);
+
      }
      .alert-warning{
-          background-color: $warning;
+          @include alert( $warning-light, $warning);
+
+          
      }
      .alert-bomb{
-          background-color: $bomb;
+          @include alert($bomb-light, $bomb);
+
+        
      }
      .alert-success{
-          background-color: $success;
+          @include alert( $success-light, $success);
+
      }
+     .alert-message-text{
+          
+    // border: 1px solid #d6d8db;
+
+    
+          padding : 20px;
+     }
+
+
 
    
 

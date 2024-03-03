@@ -30,7 +30,7 @@ class AlertMessage
         add_action('wp_enqueue_scripts', array($this, 'enqueue'));
     }
     // PLUGIN    ===========
-    //================================================================================================
+  
 
     function ifWrap($content)
     {
@@ -61,26 +61,29 @@ class AlertMessage
 
         $icon = '';
         $class = '';
-
-
+        $classBox = '';
 
         switch ($msgtype) {
 
             case '1':
                 $icon = $icon_info;
                 $class = 'alert-info';
+                $classBox = 'alert-box-info';
                 break;
             case '2':
                 $icon = $icon_waring;
                 $class = 'alert-warning';
+                $classBox = 'alert-box-warning';
                 break;
             case '3':
                 $icon = $icon_bomb;
                 $class = 'alert-bomb';
+                $classBox = 'alert-box-bomb';
                 break;
             case '4':
                 $icon = $icon_success;
                 $class = 'alert-success';
+                $classBox = 'alert-box-success';
                 break;
         }
 
@@ -90,7 +93,7 @@ class AlertMessage
         if ($is_active  && $headline &&  $location && $msgtype) {
 
 
-            $html = '<div class="alert-message wrap">';
+            $html = "<div class='alert-message $classBox wrap'>";
             $html .= "<div class='alert-message-icon $class'>";
             $html .= $icon;
             $html .= '</div>';
