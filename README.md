@@ -35,10 +35,12 @@ This is a simple plugin that adds a custom alert message to the top of every pos
 #### #Frontend
 
 ### On the post
+This is how the alert message looks on the post.
 
 ![](https://i.ibb.co/MCHGyxx/Captura-de-tela-2024-03-04-141013.png)
 
 ### Variations
+The alert message has four variations: info, warning, error, and success. You can use these variations to convey different types of messages to your users.
 
 #### Information
 ![](https://i.ibb.co/h1CD0yp/g7info.png)
