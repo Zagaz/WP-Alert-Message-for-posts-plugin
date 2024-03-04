@@ -45,35 +45,18 @@ $success-light: #d4edda;
 display: flex;
      .alert-info{
           @include alert($info-light, $info);
-
      }
      .alert-warning{
-          @include alert( $warning-light, $warning);
-
-          
+          @include alert( $warning-light, $warning);    
      }
      .alert-bomb{
           @include alert($bomb-light, $bomb);
-
-        
      }
      .alert-success{
           @include alert( $success-light, $success);
-
      }
      .alert-message-text{
-          
-    // border: 1px solid #d6d8db;
-
-    
           padding : 20px;
      }
-
-
-
-   
-
-
- 
 
 }
