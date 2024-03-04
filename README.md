@@ -56,4 +56,4 @@ The alert message has four variations: info, warning, error, and success. You ca
 ![](https://i.ibb.co/DwWhdCj/g7succ.png)
 
 
-# WP-Alert-Message-for-posts-plugin
+
