@@ -47,11 +47,9 @@ The alert message has four variations: info, warning, error, and success. You ca
 ![](https://i.ibb.co/h1CD0yp/g7info.png)
 
 ###### Warning
- Waring
 ![](https://i.ibb.co/3cJdNGX/g7.png)
 
 ###### Error
- Error
 ![](https://i.ibb.co/ss9mqYx/g7bomb.png)
 
 ###### Success
