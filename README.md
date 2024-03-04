@@ -30,6 +30,7 @@ This is a simple plugin that adds a custom alert message to the top of every pos
 3. Click on the "Save Changes" button.
 
 #### #Admin panel
+This is how the settings page looks on the admin panel.
 ![](https://i.ibb.co/t4GPzCs/Captura-de-tela-2024-03-04-140853.png)
 
 #### #Frontend
