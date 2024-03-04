@@ -29,18 +29,27 @@ This is a simple plugin that adds a custom alert message to the top of every pos
 2. Customize the message and choose the color of the alert.
 3. Click on the "Save Changes" button.
 
-#### Admin panel
+#### #Admin panel
 ![](https://i.ibb.co/t4GPzCs/Captura-de-tela-2024-03-04-140853.png)
 
-#### Frontend
+#### #Frontend
 
 ### On the post
+
 ![](https://i.ibb.co/MCHGyxx/Captura-de-tela-2024-03-04-141013.png)
 
 ### Variations
+
+## Information
 ![](https://i.ibb.co/h1CD0yp/g7info.png)
+
+## Waring
 ![](https://i.ibb.co/3cJdNGX/g7.png)
+
+## Error
 ![](https://i.ibb.co/ss9mqYx/g7bomb.png)
+
+## Success
 ![](https://i.ibb.co/DwWhdCj/g7succ.png)
 
 
