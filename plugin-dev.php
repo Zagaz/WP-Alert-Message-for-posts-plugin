@@ -27,6 +27,7 @@ class AlertMessage
         add_filter('the_content', array($this, 'ifWrap'));
         add_action('init', array($this, 'languages'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue'));
+  
     }
     // PLUGIN    ===========
   
@@ -57,12 +58,6 @@ class AlertMessage
         $icon_waring = '<i class="fas fa-exclamation-triangle"></i>';
         $icon_bomb  = '<i class="fas fa-bomb"></i>';
         $icon_success = '<i class="fas fa-check-circle"></i>';
-
-        // Message Type
-
-        // Icon
-        // Class
-        // classBox
 
         // Icons and classes names
         switch ($msgtype) {
@@ -104,7 +99,8 @@ class AlertMessage
                     return $html . $content . $html;
                     break;
             }
-            return $content;
+            
+            return $html;
         }
     }
 
@@ -117,9 +113,11 @@ class AlertMessage
             $html .= "<div class = 'alert-message-text'>$headline</div>";
         }
         $html .= '</div>';
-        $GLOBALS['html'] = $html;
         return  $html;
     }
+
+    
+
 
     function languages()
     {
@@ -242,6 +240,7 @@ class AlertMessage
         );
     }
 
+   
     function settings_page_HTML()
     {
 
@@ -257,9 +256,8 @@ class AlertMessage
                 submit_button();
                 ?>
             </form>
-            <?php 
-           
-            ?>
+     
+        </div>
         </div>
 <?php
     }
