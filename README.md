@@ -40,16 +40,16 @@ This is a simple plugin that adds a custom alert message to the top of every pos
 
 ### Variations
 
-## Information
+#### Information
 ![](https://i.ibb.co/h1CD0yp/g7info.png)
 
-## Waring
+#### Waring
 ![](https://i.ibb.co/3cJdNGX/g7.png)
 
-## Error
+#### Error
 ![](https://i.ibb.co/ss9mqYx/g7bomb.png)
 
-## Success
+#### Success
 ![](https://i.ibb.co/DwWhdCj/g7succ.png)
 
 
