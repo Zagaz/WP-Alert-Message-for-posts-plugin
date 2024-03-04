@@ -35,24 +35,26 @@ This is how the settings page looks on the admin panel.
 
 #### #Frontend
 
-### On the post
+##### On the post
 This is how the alert message looks on the post.
 
 ![](https://i.ibb.co/MCHGyxx/Captura-de-tela-2024-03-04-141013.png)
 
-### Variations
+##### Variations
 The alert message has four variations: info, warning, error, and success. You can use these variations to convey different types of messages to your users.
 
-#### Information
+###### Information
 ![](https://i.ibb.co/h1CD0yp/g7info.png)
 
-#### Waring
+###### Information
+ Waring
 ![](https://i.ibb.co/3cJdNGX/g7.png)
 
-#### Error
+###### Information
+ Error
 ![](https://i.ibb.co/ss9mqYx/g7bomb.png)
 
-#### Success
+###### Success
 ![](https://i.ibb.co/DwWhdCj/g7succ.png)
 
 
