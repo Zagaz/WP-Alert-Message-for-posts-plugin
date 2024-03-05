@@ -27,6 +27,9 @@ class AlertMessage
         add_filter('the_content', array($this, 'ifWrap'));
         add_action('init', array($this, 'languages'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue'));
+         add_action('admin_notices', array($this, 'display_admin_notice'));
+         // error alert
+   
   
     }
     // PLUGIN    ===========
@@ -101,6 +104,17 @@ class AlertMessage
             }
             
             return $html;
+        }
+    }
+
+      function display_admin_notice()
+    {
+        if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
+            ?>
+            <div class="notice notice-success is-dismissible">
+                <p><?php _e('Settings saved successfully!', 'alert-message'); ?></p>
+            </div>
+            <?php
         }
     }
 
