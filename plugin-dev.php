@@ -2,11 +2,12 @@
 /*
 Plugin Name: Alert Message
 Author: André Ranulfo
-Aurhor URI: https://github.com/Zagaz/WP-Alert-Message-for-posts-plugin
+Aurhor URI: https://www.linkedin.com/in/andre-ranulfo/
 Version: 1.0
 Description: Just for fun!
 language Domain: alert-message
 Domain Path: /languages
+Plugin URI: https://github.com/Zagaz/WP-Alert-Message-for-posts-plugin
 */
 
 if (!defined('ABSPATH')) {
