@@ -27,23 +27,16 @@ class AlertMessage
         add_filter('the_content', array($this, 'ifWrap'));
         add_action('init', array($this, 'languages'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue'));
-         add_action('admin_notices', array($this, 'display_admin_notice'));
-         // error alert
-   
-  
+        add_action('admin_notices', array($this, 'display_admin_notice'));
+        // error alert
+
+
     }
     // PLUGIN    ===========
-  
+
     function ifWrap($content)
     {
-        if (
-            is_single() && is_main_query() &&
-            (
-                get_option('amsg_wordcount', '1')  ||
-                get_option('amsg_character', '1')  ||
-                get_option('amsg_readtime', '1')
-            )
-        ) {
+        if (is_single() && is_main_query()) {
             return $this->createHTML($content);
         }
         return $content;
@@ -51,10 +44,10 @@ class AlertMessage
     function createHTML($content)
     {
         // Get the values from the database
-        $headline       = get_option('amsg_headline') ? get_option('amsg_headline')  : false;
-        $location       = get_option('amsg_location') ? get_option('amsg_location')  : false;
-        $is_active     = get_option('amsg_is_active') ? get_option('amsg_is_active')  : false;
-        $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype')  : '4';
+        $headline       = get_option('amsg_headline')  ? get_option('amsg_headline')   : false;
+        $location       = get_option('amsg_location')  ? get_option('amsg_location')   : false;
+        $is_active      = get_option('amsg_is_active') ? get_option('amsg_is_active')  : false;
+        $msgtype        = get_option('amsg_msgtype')   ? get_option('amsg_msgtype')  : '4';
 
         // Icons from font-awesome
         $icon_info = '<i class="fas fa-info-circle"></i>';
@@ -102,23 +95,24 @@ class AlertMessage
                     return $html . $content . $html;
                     break;
             }
-            
+
             return $html;
         }
     }
 
-      function display_admin_notice()
+    function display_admin_notice()
     {
         if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
-            ?>
+?>
             <div class="notice notice-success is-dismissible">
                 <p><?php _e('Settings saved successfully!', 'alert-message'); ?></p>
             </div>
-            <?php
+        <?php
         }
     }
 
-    function alertHTML($class, $icon, $headline, $classBox){
+    function alertHTML($class, $icon, $headline, $classBox)
+    {
         $html = "<div class='alert-message $classBox wrap'>";
         $html .= "<div class='alert-message-icon $class'>";
         $html .= $icon;
@@ -130,7 +124,7 @@ class AlertMessage
         return  $html;
     }
 
-    
+
 
 
     function languages()
@@ -141,7 +135,6 @@ class AlertMessage
     function enqueue()
     {
         wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
-
         // assets/css/style.css
         wp_enqueue_style('alert-message', plugin_dir_url(__FILE__) . 'assets/css/style.css');
     }
@@ -182,7 +175,7 @@ class AlertMessage
     function locationHTML()
     {
 
-?>
+        ?>
         <select name="amsg_location">
             <option value="1" <?php selected(get_option('amsg_location'), '1') ?>> <?php _e("Bottom of post", "alert-message"); ?></option>
             <option value="2" <?php selected(get_option('amsg_location'), '2') ?>> <?php _e("Top of post", "alert-message"); ?></option>
@@ -254,7 +247,7 @@ class AlertMessage
         );
     }
 
-   
+
     function settings_page_HTML()
     {
 
@@ -270,7 +263,7 @@ class AlertMessage
                 submit_button();
                 ?>
             </form>
-     
+
         </div>
         </div>
 <?php

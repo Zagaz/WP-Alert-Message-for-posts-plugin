@@ -57,4 +57,6 @@ The alert message has four variations: info, warning, error, and success. You ca
 ![](https://i.ibb.co/DwWhdCj/g7succ.png)
 
 
+🧪 - Test 🚿 - Clean Up - When comments and other unnecessary code is removed. 🖥️ - Coding - 📋 - Notes and Documentation 🐞 - Bug fix 💎 - Beautify ☕ - Coffee Break (Also: Lunch, Snack, Save etc.) 🚀 - Push to production 🔖 - Versioning 📁 - New folder or file 🔥 - Remove folder or file
+
 
