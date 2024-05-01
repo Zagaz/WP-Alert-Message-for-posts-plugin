@@ -177,7 +177,7 @@ class AlertMessage
         // LOCATION
 
         add_settings_field('amsg_location', __('Display Location', 'alert-message'), array($this, 'locationHTML'), 'alert-message-settings', 'amsg_first_section');
-        register_setting("Alert_Message", "amsg_location", array('sanitize_callback' => array($this, 'locationSanitize'), 'default' => '4'));
+        register_setting("Alert_Message", "amsg_location", array('sanitize_callback' => array($this, 'locationSanitize'), 'default' => '1'));
 
         // HEADLINE TEXT
         add_settings_field('amsg_headline', __('Headline Text', 'alert-message'), array($this, 'amsg_headlineHTML'), 'alert-message-settings', 'amsg_first_section');
