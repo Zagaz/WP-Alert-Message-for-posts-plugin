@@ -193,7 +193,20 @@ class AlertMessage
         <br>
         <input type="checkbox" name="amsg_location" value="3" <?php checked(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?>
 
-        
+        <script>
+            // on the checkboxes, on check one deselact all others
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((checkbox) => {
+                checkbox.addEventListener('change', (e) => {
+                    checkboxes.forEach((c) => {
+                        if (c !== e.target) {
+                            c.checked = false;
+                        }
+                    });
+                });
+            });
+            
+        </script>
     <?php
     }
 
