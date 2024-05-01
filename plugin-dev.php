@@ -181,7 +181,7 @@ class AlertMessage
 
         // HEADLINE TEXT
         add_settings_field('amsg_headline', __('Headline Text', 'alert-message'), array($this, 'amsg_headlineHTML'), 'alert-message-settings', 'amsg_first_section');
-        register_setting("Alert_Message", "amsg_headline", array('sanitize_callback' => 'sanitize_text_field', 'default' => ''));
+        register_setting("Alert_Message", "amsg_headline", array('sanitize_callback' => 'sanitize_text_field', 'default' => 'Don\'t forget to be awesome!'));
 
         //IS ACTIVE
         // add_settings_field('amsg_is_active', __('Is Active', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_is_active'));
