@@ -25,19 +25,19 @@ class AlertMessage
     {
         add_action('admin_menu', array($this, 'admin_page'));
         add_action('admin_init', array($this, 'settings'));
-        add_filter('the_content', array($this, 'ifWrap'));
         add_action('init', array($this, 'languages'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue'));
         add_action('admin_notices', array($this, 'display_admin_notice'));
-        // error alert
-
-
+        add_filter('the_content', array($this, 'ifWrap'));
+        // worpress filter before the_content
     }
     // PLUGIN    ===========
 
     function ifWrap($content)
     {
         if (is_single() && is_main_query()) {
+          
+
             return $this->createHTML($content);
         }
         //return $content;
@@ -46,11 +46,13 @@ class AlertMessage
     {
     
         // Get the values from the database
-        $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "Good day!";
-        $location = get_option('amsg_location') ? get_option('amsg_location') : false;
-        $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype') : '4';
-
-  
+        // $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "Good day!";
+        // $location = get_option('amsg_location') ? get_option('amsg_location') : '1';
+        // $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype') : '4';    
+        $headline = get_option ('amsg_headline') ;
+        $location = get_option ('amsg_location') ;
+        $msgtype  = get_option ('amsg_msgtype')   ;    
+        
 
         // Icons from font-awesome
         $icon_info = '<i class="fas fa-info-circle"></i>';
@@ -82,23 +84,14 @@ class AlertMessage
                 break;
         }
         // Render the HTML
-   
 
-   
-         
         if ($headline && $location && $msgtype) {
   
 
             $html = $this->alertHTML($class, $icon, $headline, $classBox);
 
-       
-
-
-
             // match the location
 
-         
-            
             switch ($location){
                 case '1':
                     return $content . $html;
