@@ -157,7 +157,7 @@ class AlertMessage
         // LOCATION
 
         add_settings_field('amsg_location', __('Display Location', 'alert-message'), array($this, 'locationHTML'), 'alert-message-settings', 'amsg_first_section');
-        register_setting("Alert_Message", "amsg_location", array('sanitize_callback' => array($this, 'locationSanitize'), 'default' => '1'));
+        register_setting("Alert_Message", "amsg_location", array('sanitize_callback' => array($this, 'locationSanitize'), 'default' => ''));
 
         // HEADLINE TEXT
         add_settings_field('amsg_headline', __('Headline Text', 'alert-message'), array($this, 'amsg_headlineHTML'), 'alert-message-settings', 'amsg_first_section');
@@ -179,17 +179,19 @@ class AlertMessage
     {
 
         ?>
-        <!-- <select name="amsg_location">
-            <option value="1" <?php selected(get_option('amsg_location'), '1') ?>> <?php _e("Bottom of post", "alert-message"); ?></option>
-            <option value="2" <?php selected(get_option('amsg_location'), '2') ?>> <?php _e("Top of post", "alert-message"); ?></option>
-            <option value="3" <?php selected(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?></option>
-        </select> -->
 
-        <input type="radio" name="amsg_location" value="1" <?php checked(get_option('amsg_location'), '1') ?>> <?php _e("Bottom of post", "alert-message"); ?>
+
+        <!-- <input type="radio" name="amsg_location" value="1" <?php checked(get_option('amsg_location'), '1') ?>> <?php _e("Bottom of post", "alert-message"); ?>
         <br>
         <input type="radio" name="amsg_location" value="2" <?php checked(get_option('amsg_location'), '2') ?>> <?php _e("Top of post", "alert-message"); ?>
         <br>
-        <input type="radio" name="amsg_location" value="3" <?php checked(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?>
+        <input type="radio" name="amsg_location" value="3" <?php checked(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?> -->
+     
+        <input type="checkbox" name="amsg_location" value="2" <?php checked(get_option('amsg_location'), '2') ?>> <?php _e("Top of post", "alert-message"); ?>
+        <br>
+        <input type="checkbox" name="amsg_location" value="1" <?php checked(get_option('amsg_location'), '1') ?>> <?php _e("Bottom of post", "alert-message"); ?>
+        <br>
+        <input type="checkbox" name="amsg_location" value="3" <?php checked(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?>
 
         
     <?php
