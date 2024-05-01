@@ -36,7 +36,7 @@ class AlertMessage
     function ifWrap($content)
     {
         if (is_single() && is_main_query()) {
-          
+
 
             return $this->createHTML($content);
         }
@@ -44,15 +44,15 @@ class AlertMessage
     }
     function createHTML($content)
     {
-    
+
         // Get the values from the database
         // $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "Good day!";
         // $location = get_option('amsg_location') ? get_option('amsg_location') : '1';
         // $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype') : '4';    
-        $headline = get_option ('amsg_headline') ;
-        $location = get_option ('amsg_location') ;
-        $msgtype  = get_option ('amsg_msgtype')   ;    
-        
+        $headline = get_option('amsg_headline');
+        $location = get_option('amsg_location');
+        $msgtype = get_option('amsg_msgtype');
+
 
         // Icons from font-awesome
         $icon_info = '<i class="fas fa-info-circle"></i>';
@@ -86,13 +86,13 @@ class AlertMessage
         // Render the HTML
 
         if ($headline && $location && $msgtype) {
-  
+
 
             $html = $this->alertHTML($class, $icon, $headline, $classBox);
 
             // match the location
 
-            switch ($location){
+            switch ($location) {
                 case '1':
                     return $content . $html;
                     break;
@@ -103,9 +103,9 @@ class AlertMessage
                     return $html . $content . $html;
                     break;
                 case '4':
-                    return  $content;
+                    return $content;
                     break;
-                    default:
+                default:
                     return $content;
             }
 
@@ -201,9 +201,9 @@ class AlertMessage
         <?php _e("Bottom of post", "alert-message"); ?>
         <br>
         <input type="checkbox" name="amsg_location" value="3" <?php checked(get_option('amsg_location'), '3') ?>>
-        <?php _e('Both', "alert-message"); ?>       
+        <?php _e('Both', "alert-message"); ?>
         <br>
-        <input type="checkbox" name="amsg_location" value="4" <?php checked(get_option('amsg_location'), '4') ?>> 
+        <input type="checkbox" name="amsg_location" value="4" <?php checked(get_option('amsg_location'), '4') ?>>
         <?php _e('None', "alert-message"); ?>
 
         <script>
