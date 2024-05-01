@@ -46,7 +46,7 @@ class AlertMessage
     {
     
         // Get the values from the database
-        $headline = get_option('amsg_headline') ? get_option('amsg_headline') : false;
+        $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "Good day!";
         $location = get_option('amsg_location') ? get_option('amsg_location') : false;
         $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype') : '4';
 
