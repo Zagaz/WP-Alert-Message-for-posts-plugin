@@ -44,15 +44,18 @@ class AlertMessage
     }
     function createHTML($content)
     {
+    
         // Get the values from the database
-        $headline       = get_option('amsg_headline')  ? get_option('amsg_headline')   : false;
-        $location       = get_option('amsg_location')  ? get_option('amsg_location')   : false;
-        $msgtype        = get_option('amsg_msgtype')   ? get_option('amsg_msgtype')  : '4';
+        $headline = get_option('amsg_headline') ? get_option('amsg_headline') : false;
+        $location = get_option('amsg_location') ? get_option('amsg_location') : false;
+        $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype') : '4';
+
+  
 
         // Icons from font-awesome
         $icon_info = '<i class="fas fa-info-circle"></i>';
         $icon_waring = '<i class="fas fa-exclamation-triangle"></i>';
-        $icon_bomb  = '<i class="fas fa-bomb"></i>';
+        $icon_bomb = '<i class="fas fa-bomb"></i>';
         $icon_success = '<i class="fas fa-check-circle"></i>';
 
         // Icons and classes names
@@ -79,38 +82,47 @@ class AlertMessage
                 break;
         }
         // Render the HTML
-        if ( $headline &&  $location && $msgtype) {
+   
+
+   
+         
+        if ($headline && $location && $msgtype) {
+  
 
             $html = $this->alertHTML($class, $icon, $headline, $classBox);
 
-            // match switch case
-            switch ($location) {
-                case '1':
-                    return $content . $html;
-                    break;
-                case '2':
-                    return $html . $content;
-                    break;
-                case '3':
-                    return $html . $content . $html;
-                    break;
-                   
-                default:
-                    return $content;
-            }
+       
 
-            return $html;
+
+
+            // match the location
+
+            if ($location == '1') {
+                return $content . $html;
+            } elseif ($location == '2') {
+                return $html . $content;
+            } elseif ($location == '3') {
+                return $html . $content . $html;
+            } elseif ($location == '4') {
+                return  $content;
+            }
+     
+
+          // question :  why $content is not showing in the frontend?
+
+
+
         }
     }
 
     function display_admin_notice()
     {
         if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
-?>
+            ?>
             <div class="notice notice-success is-dismissible">
                 <p><?php _e('Settings saved successfully!', 'alert-message'); ?></p>
             </div>
-        <?php
+            <?php
         }
     }
 
@@ -124,7 +136,7 @@ class AlertMessage
             $html .= "<div class = 'alert-message-text'>$headline</div>";
         }
         $html .= '</div>';
-        return  $html;
+        return $html;
     }
 
 
@@ -181,20 +193,20 @@ class AlertMessage
         ?>
 
 
-        <!-- <input type="radio" name="amsg_location" value="1" <?php checked(get_option('amsg_location'), '1') ?>> <?php _e("Bottom of post", "alert-message"); ?>
+        <input type="checkbox" name="amsg_location" value="2" <?php checked(get_option('amsg_location'), '2') ?>>
+        <?php _e("Top of post", "alert-message"); ?>
         <br>
-        <input type="radio" name="amsg_location" value="2" <?php checked(get_option('amsg_location'), '2') ?>> <?php _e("Top of post", "alert-message"); ?>
+        <input type="checkbox" name="amsg_location" value="1" <?php checked(get_option('amsg_location'), '1') ?>>
+        <?php _e("Bottom of post", "alert-message"); ?>
         <br>
-        <input type="radio" name="amsg_location" value="3" <?php checked(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?> -->
-     
-        <input type="checkbox" name="amsg_location" value="2" <?php checked(get_option('amsg_location'), '2') ?>> <?php _e("Top of post", "alert-message"); ?>
+        <input type="checkbox" name="amsg_location" value="3" <?php checked(get_option('amsg_location'), '3') ?>>
+        <?php _e('Both', "alert-message"); ?>       
         <br>
-        <input type="checkbox" name="amsg_location" value="1" <?php checked(get_option('amsg_location'), '1') ?>> <?php _e("Bottom of post", "alert-message"); ?>
-        <br>
-        <input type="checkbox" name="amsg_location" value="3" <?php checked(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?>
+        <input type="checkbox" name="amsg_location" value="4" <?php checked(get_option('amsg_location'), '4') ?>> 
+        <?php _e('None', "alert-message"); ?>
 
         <script>
-            // on the checkboxes, on check one deselact all others
+            // The checkbox will behave as radio buttons
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
             checkboxes.forEach((checkbox) => {
                 checkbox.addEventListener('change', (e) => {
@@ -205,14 +217,14 @@ class AlertMessage
                     });
                 });
             });
-            
+
         </script>
-    <?php
+        <?php
     }
 
     function locationSanitize($input)
     {
-        if ($input != '1' && $input != '2' && $input != '3') {
+        if ($input != '1' && $input != '2' && $input != '3' && $input != '4') {
 
             add_settings_error('amsg_location', __('amsg_location_error', 'languages'), __('Invalid value'), 'error');
             return get_option('amsg_location');
@@ -222,14 +234,17 @@ class AlertMessage
 
     function msgtypeHTML()
     {
-    ?>
+        ?>
         <select name="amsg_msgtype">
             <option value="1" <?php selected(get_option('amsg_msgtype'), '1') ?>> <?php _e("Info", "alert-message"); ?></option>
-            <option value="2" <?php selected(get_option('amsg_msgtype'), '2') ?>> <?php _e("Warning", "alert-message"); ?></option>
-            <option value="3" <?php selected(get_option('amsg_msgtype'), '3') ?>> <?php _e('Danger', "alert-message"); ?></option>
-            <option value="4" <?php selected(get_option('amsg_msgtype'), '4') ?>> <?php _e('Success', "alert-message"); ?></option>
+            <option value="2" <?php selected(get_option('amsg_msgtype'), '2') ?>> <?php _e("Warning", "alert-message"); ?>
+            </option>
+            <option value="3" <?php selected(get_option('amsg_msgtype'), '3') ?>> <?php _e('Danger', "alert-message"); ?>
+            </option>
+            <option value="4" <?php selected(get_option('amsg_msgtype'), '4') ?>> <?php _e('Success', "alert-message"); ?>
+            </option>
         </select>
-    <?php
+        <?php
     }
 
     function msgtypeSanitize($input)
@@ -244,10 +259,11 @@ class AlertMessage
 
     function amsg_headlineHTML()
     {
-    ?>
-        <textarea name="amsg_headline" rows="3" cols="50" placeholder="Your message here!"><?php echo get_option('amsg_headline'); ?></textarea>
-        
-    <?php
+        ?>
+        <textarea name="amsg_headline" rows="3" cols="50"
+            placeholder="Your message here!"><?php echo get_option('amsg_headline'); ?></textarea>
+
+        <?php
     }
 
 
@@ -271,10 +287,10 @@ class AlertMessage
     function settings_page_HTML()
     {
 
-    ?>
+        ?>
         <div class="wrap">
             <?php // The .wrap is  a class that comes with WordPress and it's a wrapper for the content
-            ?>
+                    ?>
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
             <form action="options.php" method="POST">
                 <?php
@@ -286,6 +302,6 @@ class AlertMessage
 
         </div>
         </div>
-<?php
+        <?php
     }
 }
