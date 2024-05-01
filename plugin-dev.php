@@ -177,11 +177,18 @@ class AlertMessage
     {
 
         ?>
-        <select name="amsg_location">
+        <!-- <select name="amsg_location">
             <option value="1" <?php selected(get_option('amsg_location'), '1') ?>> <?php _e("Bottom of post", "alert-message"); ?></option>
             <option value="2" <?php selected(get_option('amsg_location'), '2') ?>> <?php _e("Top of post", "alert-message"); ?></option>
             <option value="3" <?php selected(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?></option>
-        </select>
+        </select> -->
+
+        <input type="radio" name="amsg_location" value="1" <?php checked(get_option('amsg_location'), '1') ?>> <?php _e("Bottom of post", "alert-message"); ?>
+        <br>
+        <input type="radio" name="amsg_location" value="2" <?php checked(get_option('amsg_location'), '2') ?>> <?php _e("Top of post", "alert-message"); ?>
+        <br>
+        <input type="radio" name="amsg_location" value="3" <?php checked(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?>
+
         
     <?php
     }
@@ -226,13 +233,6 @@ class AlertMessage
     <?php
     }
 
-    function checkboxHTML($args)
-    {
-        $name = $args['theName'];
-    ?>
-        <input type="checkbox" name="<?php echo $name; ?>" value="1" <?php checked(get_option($name), '1'); ?>>
-    <?php
-    }
 
     // Page
     function admin_page()
