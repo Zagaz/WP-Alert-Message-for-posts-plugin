@@ -47,7 +47,7 @@ class AlertMessage
         // Get the values from the database
         $headline       = get_option('amsg_headline')  ? get_option('amsg_headline')   : false;
         $location       = get_option('amsg_location')  ? get_option('amsg_location')   : false;
-        $is_active      = get_option('amsg_is_active') ? get_option('amsg_is_active')  : false;
+       // $is_active      = get_option('amsg_is_active') ? get_option('amsg_is_active')  : false;
         $msgtype        = get_option('amsg_msgtype')   ? get_option('amsg_msgtype')  : '4';
 
         // Icons from font-awesome
@@ -80,7 +80,7 @@ class AlertMessage
                 break;
         }
         // Render the HTML
-        if ($is_active  && $headline &&  $location && $msgtype) {
+        if ( $headline &&  $location && $msgtype) {
 
             $html = $this->alertHTML($class, $icon, $headline, $classBox);
 
@@ -162,8 +162,8 @@ class AlertMessage
         register_setting("Alert_Message", "amsg_headline", array('sanitize_callback' => 'sanitize_text_field', 'default' => 'Your Message!'));
 
         //IS ACTIVE
-        add_settings_field('amsg_is_active', __('Is Active', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_is_active'));
-        register_setting("Alert_Message", "amsg_is_active", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
+        // add_settings_field('amsg_is_active', __('Is Active', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_is_active'));
+        // register_setting("Alert_Message", "amsg_is_active", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
         // Message Type
         add_settings_field('amsg_msgtype', __('Type of message', 'alert-message'), array($this, 'msgtypeHTML'), 'alert-message-settings', 'amsg_first_section');
         register_setting("Alert_Message", "amsg_msgtype", array('sanitize_callback' => array($this, 'msgtypeSanitize'), 'default' => '1'));
