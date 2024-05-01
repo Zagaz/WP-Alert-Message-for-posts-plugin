@@ -97,18 +97,26 @@ class AlertMessage
 
             // match the location
 
-            if ($location == '1') {
-                return $content . $html;
-            } elseif ($location == '2') {
-                return $html . $content;
-            } elseif ($location == '3') {
-                return $html . $content . $html;
-            } elseif ($location == '4') {
-                return  $content;
+         
+            
+            switch ($location){
+                case '1':
+                    return $content . $html;
+                    break;
+                case '2':
+                    return $html . $content;
+                    break;
+                case '3':
+                    return $html . $content . $html;
+                    break;
+                case '4':
+                    return  $content;
+                    break;
+                    default:
+                    return $content;
             }
-     
 
-          // question :  why $content is not showing in the frontend?
+
 
 
 
@@ -169,7 +177,7 @@ class AlertMessage
         // LOCATION
 
         add_settings_field('amsg_location', __('Display Location', 'alert-message'), array($this, 'locationHTML'), 'alert-message-settings', 'amsg_first_section');
-        register_setting("Alert_Message", "amsg_location", array('sanitize_callback' => array($this, 'locationSanitize'), 'default' => ''));
+        register_setting("Alert_Message", "amsg_location", array('sanitize_callback' => array($this, 'locationSanitize'), 'default' => '4'));
 
         // HEADLINE TEXT
         add_settings_field('amsg_headline', __('Headline Text', 'alert-message'), array($this, 'amsg_headlineHTML'), 'alert-message-settings', 'amsg_first_section');
