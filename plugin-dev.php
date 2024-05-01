@@ -159,7 +159,7 @@ class AlertMessage
 
         // HEADLINE TEXT
         add_settings_field('amsg_headline', __('Headline Text', 'alert-message'), array($this, 'amsg_headlineHTML'), 'alert-message-settings', 'amsg_first_section');
-        register_setting("Alert_Message", "amsg_headline", array('sanitize_callback' => 'sanitize_text_field', 'default' => 'Your Message!'));
+        register_setting("Alert_Message", "amsg_headline", array('sanitize_callback' => 'sanitize_text_field', 'default' => ''));
 
         //IS ACTIVE
         // add_settings_field('amsg_is_active', __('Is Active', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_is_active'));
@@ -182,6 +182,7 @@ class AlertMessage
             <option value="2" <?php selected(get_option('amsg_location'), '2') ?>> <?php _e("Top of post", "alert-message"); ?></option>
             <option value="3" <?php selected(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?></option>
         </select>
+        
     <?php
     }
 
@@ -220,7 +221,8 @@ class AlertMessage
     function amsg_headlineHTML()
     {
     ?>
-        <textarea name="amsg_headline" rows="3" cols="50"><?php echo get_option('amsg_headline'); ?></textarea>
+        <textarea name="amsg_headline" rows="3" cols="50" placeholder="Your message here!"><?php echo get_option('amsg_headline'); ?></textarea>
+        
     <?php
     }
 
