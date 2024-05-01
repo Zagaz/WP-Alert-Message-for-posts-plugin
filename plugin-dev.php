@@ -40,14 +40,13 @@ class AlertMessage
         if (is_single() && is_main_query()) {
             return $this->createHTML($content);
         }
-        return $content;
+        //return $content;
     }
     function createHTML($content)
     {
         // Get the values from the database
         $headline       = get_option('amsg_headline')  ? get_option('amsg_headline')   : false;
         $location       = get_option('amsg_location')  ? get_option('amsg_location')   : false;
-       // $is_active      = get_option('amsg_is_active') ? get_option('amsg_is_active')  : false;
         $msgtype        = get_option('amsg_msgtype')   ? get_option('amsg_msgtype')  : '4';
 
         // Icons from font-awesome
@@ -95,6 +94,9 @@ class AlertMessage
                 case '3':
                     return $html . $content . $html;
                     break;
+                   
+                default:
+                    return $content;
             }
 
             return $html;
