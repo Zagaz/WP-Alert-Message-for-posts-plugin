@@ -24,14 +24,11 @@ class AlertMessage
     public function __construct()
     {
         add_action('admin_menu', array($this, 'admin_page'));
-        add_action('admin_init', array($this, 'settings'));
         add_filter('the_content', array($this, 'ifWrap'));
         add_action('init', array($this, 'languages'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue'));
+        add_action('admin_init', array($this, 'settings'));
         add_action('admin_notices', array($this, 'display_admin_notice'));
-        // error alert
-
-
     }
     // PLUGIN    ===========
 
@@ -40,20 +37,20 @@ class AlertMessage
         if (is_single() && is_main_query()) {
             return $this->createHTML($content);
         }
-        return $content;
+  
     }
     function createHTML($content)
     {
-        // Get the values from the database
-        $headline       = get_option('amsg_headline')  ? get_option('amsg_headline')   : false;
-        $location       = get_option('amsg_location')  ? get_option('amsg_location')   : false;
-       // $is_active      = get_option('amsg_is_active') ? get_option('amsg_is_active')  : false;
-        $msgtype        = get_option('amsg_msgtype')   ? get_option('amsg_msgtype')  : '4';
+    
+        // Get the options
+        $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "Don't forget to be awesome!";
+        $location = get_option('amsg_location') ? get_option('amsg_location') : "1";
+        $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype') : '1';
 
         // Icons from font-awesome
         $icon_info = '<i class="fas fa-info-circle"></i>';
         $icon_waring = '<i class="fas fa-exclamation-triangle"></i>';
-        $icon_bomb  = '<i class="fas fa-bomb"></i>';
+        $icon_bomb = '<i class="fas fa-bomb"></i>';
         $icon_success = '<i class="fas fa-check-circle"></i>';
 
         // Icons and classes names
@@ -79,13 +76,12 @@ class AlertMessage
                 $classBox = 'alert-box-success';
                 break;
         }
+
         // Render the HTML
-        if ( $headline &&  $location && $msgtype) {
-
+        if ($headline && $location && $msgtype) {
             $html = $this->alertHTML($class, $icon, $headline, $classBox);
-
-            // match switch case
-            switch ($location) {
+            // Check the location and render HTML
+            switch ($location){
                 case '1':
                     return $content . $html;
                     break;
@@ -95,23 +91,28 @@ class AlertMessage
                 case '3':
                     return $html . $content . $html;
                     break;
+                case '4':
+                    return  $content;
+                    break;
+                    default:
+                    return $content;
             }
 
-            return $html;
         }
     }
 
     function display_admin_notice()
     {
         if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
-?>
+            ?>
             <div class="notice notice-success is-dismissible">
                 <p><?php _e('Settings saved successfully!', 'alert-message'); ?></p>
             </div>
-        <?php
+            <?php
         }
     }
 
+    // HTML for frontend
     function alertHTML($class, $icon, $headline, $classBox)
     {
         $html = "<div class='alert-message $classBox wrap'>";
@@ -122,11 +123,8 @@ class AlertMessage
             $html .= "<div class = 'alert-message-text'>$headline</div>";
         }
         $html .= '</div>';
-        return  $html;
+        return $html;
     }
-
-
-
 
     function languages()
     {
@@ -141,7 +139,7 @@ class AlertMessage
     }
 
     // SETTINGS ===========
-    //================================================================================================
+
     function settings()
     {
         //https://developer.wordpress.org/reference/functions/add_settings_section/
@@ -159,36 +157,50 @@ class AlertMessage
 
         // HEADLINE TEXT
         add_settings_field('amsg_headline', __('Headline Text', 'alert-message'), array($this, 'amsg_headlineHTML'), 'alert-message-settings', 'amsg_first_section');
-        register_setting("Alert_Message", "amsg_headline", array('sanitize_callback' => 'sanitize_text_field', 'default' => 'Your Message!'));
+        register_setting("Alert_Message", "amsg_headline", array('sanitize_callback' => 'sanitize_text_field', 'default' => "Don't forget to be awesome!"));
 
-        //IS ACTIVE
-        // add_settings_field('amsg_is_active', __('Is Active', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_is_active'));
-        // register_setting("Alert_Message", "amsg_is_active", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
-        // Message Type
+        //Type of message (Info, Warning, Danger, Success)
         add_settings_field('amsg_msgtype', __('Type of message', 'alert-message'), array($this, 'msgtypeHTML'), 'alert-message-settings', 'amsg_first_section');
         register_setting("Alert_Message", "amsg_msgtype", array('sanitize_callback' => array($this, 'msgtypeSanitize'), 'default' => '1'));
     }
 
-    // CALLBACKS
     //================================================================================================
-
+    // CALLBACKS
     // LOCATION
-    function locationHTML()
-    {
+    function locationHTML(){ ?>
 
-        ?>
-        <select name="amsg_location">
-            <option value="1" <?php selected(get_option('amsg_location'), '1') ?>> <?php _e("Bottom of post", "alert-message"); ?></option>
-            <option value="2" <?php selected(get_option('amsg_location'), '2') ?>> <?php _e("Top of post", "alert-message"); ?></option>
-            <option value="3" <?php selected(get_option('amsg_location'), '3') ?>> <?php _e('Both', "alert-message"); ?></option>
-        </select>
-    <?php
+        <input type="checkbox" name="amsg_location" value="2" <?php checked(get_option('amsg_location'), '2') ?>>
+        <?php _e("Top of post", "alert-message"); ?>
+        <br>
+        <input type="checkbox" name="amsg_location" value="1" <?php checked(get_option('amsg_location'), '1') ?>>
+        <?php _e("Bottom of post", "alert-message"); ?>
+        <br>
+        <input type="checkbox" name="amsg_location" value="3" <?php checked(get_option('amsg_location'), '3') ?>>
+        <?php _e('Both', "alert-message"); ?>       
+        <br>
+        <input type="checkbox" name="amsg_location" value="4" <?php checked(get_option('amsg_location'), '4') ?>> 
+        <?php _e('None', "alert-message"); ?>
+
+        <script>
+            // The checkbox will behave as radio buttons
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((checkbox) => {
+                checkbox.addEventListener('change', (e) => {
+                    checkboxes.forEach((c) => {
+                        if (c !== e.target) {
+                            c.checked = false;
+                        }
+                    });
+                });
+            });
+
+        </script>
+        <?php
     }
 
     function locationSanitize($input)
     {
-        if ($input != '1' && $input != '2' && $input != '3') {
-
+        if ($input != '1' && $input != '2' && $input != '3' && $input != '4') {
             add_settings_error('amsg_location', __('amsg_location_error', 'languages'), __('Invalid value'), 'error');
             return get_option('amsg_location');
         }
@@ -197,20 +209,22 @@ class AlertMessage
 
     function msgtypeHTML()
     {
-    ?>
+        ?>
         <select name="amsg_msgtype">
             <option value="1" <?php selected(get_option('amsg_msgtype'), '1') ?>> <?php _e("Info", "alert-message"); ?></option>
-            <option value="2" <?php selected(get_option('amsg_msgtype'), '2') ?>> <?php _e("Warning", "alert-message"); ?></option>
-            <option value="3" <?php selected(get_option('amsg_msgtype'), '3') ?>> <?php _e('Danger', "alert-message"); ?></option>
-            <option value="4" <?php selected(get_option('amsg_msgtype'), '4') ?>> <?php _e('Success', "alert-message"); ?></option>
+            <option value="2" <?php selected(get_option('amsg_msgtype'), '2') ?>> <?php _e("Warning", "alert-message"); ?>
+            </option>
+            <option value="3" <?php selected(get_option('amsg_msgtype'), '3') ?>> <?php _e('Danger', "alert-message"); ?>
+            </option>
+            <option value="4" <?php selected(get_option('amsg_msgtype'), '4') ?>> <?php _e('Success', "alert-message"); ?>
+            </option>
         </select>
-    <?php
+        <?php
     }
 
     function msgtypeSanitize($input)
     {
         if ($input != '1' && $input != '2' && $input != '3' && $input != '4') {
-
             add_settings_error('amsg_msgtype', __('amsg_msgtype_error', 'languages'), __('Invalid value'), 'error');
             return get_option('amsg_msgtype');
         }
@@ -219,18 +233,13 @@ class AlertMessage
 
     function amsg_headlineHTML()
     {
-    ?>
-        <textarea name="amsg_headline" rows="3" cols="50"><?php echo get_option('amsg_headline'); ?></textarea>
-    <?php
+        ?>
+        <textarea name="amsg_headline" rows="3" cols="50"
+            placeholder="Your message here!"><?php echo get_option('amsg_headline'); ?></textarea>
+
+        <?php
     }
 
-    function checkboxHTML($args)
-    {
-        $name = $args['theName'];
-    ?>
-        <input type="checkbox" name="<?php echo $name; ?>" value="1" <?php checked(get_option($name), '1'); ?>>
-    <?php
-    }
 
     // Page
     function admin_page()
@@ -252,10 +261,10 @@ class AlertMessage
     function settings_page_HTML()
     {
 
-    ?>
+        ?>
         <div class="wrap">
             <?php // The .wrap is  a class that comes with WordPress and it's a wrapper for the content
-            ?>
+                    ?>
             <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
             <form action="options.php" method="POST">
                 <?php
@@ -267,6 +276,6 @@ class AlertMessage
 
         </div>
         </div>
-<?php
+        <?php
     }
 }
