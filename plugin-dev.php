@@ -48,8 +48,8 @@ class AlertMessage
          // $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "Good day!";
         // $location = get_option('amsg_location') ? get_option('amsg_location') : false;
         // $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype') : '4';
-        $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "1";
-        $location = get_option('amsg_location') ? get_option('amsg_location') : "Don\'t forget to be awesome!";
+        $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "Don\'t forget to be awesome!";
+        $location = get_option('amsg_location') ? get_option('amsg_location') : "1";
         $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype') : '1';
 
 
