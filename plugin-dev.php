@@ -24,34 +24,28 @@ class AlertMessage
     public function __construct()
     {
         add_action('admin_menu', array($this, 'admin_page'));
-        add_action('admin_init', array($this, 'settings'));
+        add_filter('the_content', array($this, 'ifWrap'));
         add_action('init', array($this, 'languages'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue'));
+        add_action('admin_init', array($this, 'settings'));
         add_action('admin_notices', array($this, 'display_admin_notice'));
-        add_filter('the_content', array($this, 'ifWrap'));
-        // worpress filter before the_content
     }
     // PLUGIN    ===========
 
     function ifWrap($content)
     {
         if (is_single() && is_main_query()) {
-
-
             return $this->createHTML($content);
         }
-        //return $content;
+  
     }
     function createHTML($content)
     {
-
-         // $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "Good day!";
-        // $location = get_option('amsg_location') ? get_option('amsg_location') : false;
-        // $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype') : '4';
-        $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "Don't forget to be awesome!";
-        $location = get_option('amsg_location') ? get_option('amsg_location') : "1";
+    
+        // Get the options
+        $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "1";
+        $location = get_option('amsg_location') ? get_option('amsg_location') : "Don\'t forget to be awesome!";
         $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype') : '1';
-
 
         // Icons from font-awesome
         $icon_info = '<i class="fas fa-info-circle"></i>';
@@ -82,16 +76,12 @@ class AlertMessage
                 $classBox = 'alert-box-success';
                 break;
         }
+
         // Render the HTML
-
         if ($headline && $location && $msgtype) {
-
-
             $html = $this->alertHTML($class, $icon, $headline, $classBox);
-
-            // match the location
-
-            switch ($location) {
+            // Check the location and render HTML
+            switch ($location){
                 case '1':
                     return $content . $html;
                     break;
@@ -102,15 +92,11 @@ class AlertMessage
                     return $html . $content . $html;
                     break;
                 case '4':
-                    return $content;
+                    return  $content;
                     break;
-                default:
+                    default:
                     return $content;
             }
-
-
-
-
 
         }
     }
@@ -126,6 +112,7 @@ class AlertMessage
         }
     }
 
+    // HTML for frontend
     function alertHTML($class, $icon, $headline, $classBox)
     {
         $html = "<div class='alert-message $classBox wrap'>";
@@ -138,9 +125,6 @@ class AlertMessage
         $html .= '</div>';
         return $html;
     }
-
-
-
 
     function languages()
     {
@@ -155,7 +139,7 @@ class AlertMessage
     }
 
     // SETTINGS ===========
-    //================================================================================================
+
     function settings()
     {
         //https://developer.wordpress.org/reference/functions/add_settings_section/
@@ -175,23 +159,15 @@ class AlertMessage
         add_settings_field('amsg_headline', __('Headline Text', 'alert-message'), array($this, 'amsg_headlineHTML'), 'alert-message-settings', 'amsg_first_section');
         register_setting("Alert_Message", "amsg_headline", array('sanitize_callback' => 'sanitize_text_field', 'default' => 'Don\'t forget to be awesome!'));
 
-        //IS ACTIVE
-        // add_settings_field('amsg_is_active', __('Is Active', 'alert-message'), array($this, 'checkboxHTML'), 'alert-message-settings', 'amsg_first_section', array('theName' => 'amsg_is_active'));
-        // register_setting("Alert_Message", "amsg_is_active", array('sanitize_callback' => 'sanitize_text_field', 'default' => '0'));
-        // Message Type
+        //Type of message (Info, Warning, Danger, Success)
         add_settings_field('amsg_msgtype', __('Type of message', 'alert-message'), array($this, 'msgtypeHTML'), 'alert-message-settings', 'amsg_first_section');
         register_setting("Alert_Message", "amsg_msgtype", array('sanitize_callback' => array($this, 'msgtypeSanitize'), 'default' => '1'));
     }
 
-    // CALLBACKS
     //================================================================================================
-
+    // CALLBACKS
     // LOCATION
-    function locationHTML()
-    {
-
-        ?>
-
+    function locationHTML(){ ?>
 
         <input type="checkbox" name="amsg_location" value="2" <?php checked(get_option('amsg_location'), '2') ?>>
         <?php _e("Top of post", "alert-message"); ?>
@@ -200,9 +176,9 @@ class AlertMessage
         <?php _e("Bottom of post", "alert-message"); ?>
         <br>
         <input type="checkbox" name="amsg_location" value="3" <?php checked(get_option('amsg_location'), '3') ?>>
-        <?php _e('Both', "alert-message"); ?>
+        <?php _e('Both', "alert-message"); ?>       
         <br>
-        <input type="checkbox" name="amsg_location" value="4" <?php checked(get_option('amsg_location'), '4') ?>>
+        <input type="checkbox" name="amsg_location" value="4" <?php checked(get_option('amsg_location'), '4') ?>> 
         <?php _e('None', "alert-message"); ?>
 
         <script>
@@ -225,7 +201,6 @@ class AlertMessage
     function locationSanitize($input)
     {
         if ($input != '1' && $input != '2' && $input != '3' && $input != '4') {
-
             add_settings_error('amsg_location', __('amsg_location_error', 'languages'), __('Invalid value'), 'error');
             return get_option('amsg_location');
         }
@@ -250,7 +225,6 @@ class AlertMessage
     function msgtypeSanitize($input)
     {
         if ($input != '1' && $input != '2' && $input != '3' && $input != '4') {
-
             add_settings_error('amsg_msgtype', __('amsg_msgtype_error', 'languages'), __('Invalid value'), 'error');
             return get_option('amsg_msgtype');
         }
