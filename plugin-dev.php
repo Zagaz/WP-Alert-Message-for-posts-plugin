@@ -43,8 +43,8 @@ class AlertMessage
     {
     
         // Get the options
-        $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "1";
-        $location = get_option('amsg_location') ? get_option('amsg_location') : "Don\'t forget to be awesome!";
+        $headline = get_option('amsg_headline') ? get_option('amsg_headline') : "Don't forget to be awesome!";
+        $location = get_option('amsg_location') ? get_option('amsg_location') : "1";
         $msgtype = get_option('amsg_msgtype') ? get_option('amsg_msgtype') : '1';
 
         // Icons from font-awesome
@@ -157,7 +157,7 @@ class AlertMessage
 
         // HEADLINE TEXT
         add_settings_field('amsg_headline', __('Headline Text', 'alert-message'), array($this, 'amsg_headlineHTML'), 'alert-message-settings', 'amsg_first_section');
-        register_setting("Alert_Message", "amsg_headline", array('sanitize_callback' => 'sanitize_text_field', 'default' => 'Don\'t forget to be awesome!'));
+        register_setting("Alert_Message", "amsg_headline", array('sanitize_callback' => 'sanitize_text_field', 'default' => "Don't forget to be awesome!"));
 
         //Type of message (Info, Warning, Danger, Success)
         add_settings_field('amsg_msgtype', __('Type of message', 'alert-message'), array($this, 'msgtypeHTML'), 'alert-message-settings', 'amsg_first_section');
