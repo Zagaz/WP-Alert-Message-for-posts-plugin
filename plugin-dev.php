@@ -4,7 +4,7 @@ Plugin Name: Alert Message
 Author: André Ranulfo
 Aurhor URI: https://www.linkedin.com/in/andre-ranulfo/
 Version: 1.0
-Description: Just for fun!
+Description: Display a custom alert message on posts.
 language Domain: alert-message
 Domain Path: /languages
 Plugin URI: https://github.com/Zagaz/WP-Alert-Message-for-posts-plugin
