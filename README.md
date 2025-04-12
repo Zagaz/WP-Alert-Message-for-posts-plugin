@@ -1,5 +1,7 @@
 # Wordpress Plugin with WP Settings API.
 
+![Badge](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FZagaz%2FWP-Alert-Message-for-posts-plugin&label=Alert+Messages&icon=wordpress&color=%23198754)
+
 Hello people! Just another CODE FOR FUN!!! 👨‍💻🎉 I've been diving deep into the exhilarating world of Plugin development, with a laser focus on mastering the WordPress Settings API and the art of Plugin translation. Armed with enthusiasm and a hefty dose of curiosity, I've embarked on a journey of experimentation and discovery, crafting intuitive options pages that are as user-friendly as they are delightful to navigate. Picture this: users gleefully tinkering with settings, their faces lighting up with joy as they tailor their WordPress experience to perfection! But wait, there's more! I've also sprinkled in some linguistic magic, ensuring that my Plugin speaks the language of every user, no matter where they are in the world. From "Bonjour" to "Hola" and beyond, my Plugin is ready to mingle with users from all corners of the globe. So buckle up and join me on this wild ride through the colorful realm of WordPress Plugin development – where every line of code is infused with a dash of fun and a sprinkle of magic! 🚀✨
 
 ### # Description
